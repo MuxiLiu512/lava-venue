@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>Lava × 合作店家招募 · 把對的客人，送上你的桌</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Lava 是台北的「不靠聊天」交友 App。合作店家招募中——把可預期的兩人客流，導進你的非峰期時段。">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="colors_and_type.css">
+<link rel="stylesheet" href="site.css">
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+
+<script>
+window.TWEAK_DEFAULTS = { type_scale: 99, density: 100, radius: 16, page_width: 1440 };
+
+// Start fetching content.json immediately (before Babel compiles JSX)
+window.__contentReady = (function() {
+  if (window.location.protocol === 'file:') return Promise.resolve({});
+  return fetch('./content.json')
+    .then(function(r) { return r.ok ? r.json() : {}; })
+    .catch(function() { return {}; });
+})();
+</script>
+
+<style>
+  html, body { background: #FFF5DC; margin: 0; padding: 0; }
+  #root { min-height: 100vh; }
+  .lva-page { width: 100%; max-width: 1920px; margin: 0 auto; }
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="dir-shared.jsx"></script>
+<script type="text/babel" src="dir-a.jsx"></script>
+
+<script type="text/babel">
+function applyContentOverrides(overrides) {
+  const C = window.CONTENT;
+  if (!C || !overrides) return;
+
+  if (overrides.testimonial) {
+    const o = overrides.testimonial;
+    if (o.quote)     C.testimonial.quote     = o.quote;
+    if (o.author)    C.testimonial.author    = o.author;
+    if (o.venue)     C.testimonial.venue     = o.venue;
+    if (o.avatarUrl) C.testimonial._avatarUrl = o.avatarUrl;
+  }
+
+  if (overrides.partners) {
+    if (typeof overrides.partners.show === 'boolean')
+      window.__SHOW_PARTNERS = overrides.partners.show;
+    if (Array.isArray(overrides.partners.items)) {
+      C.partners = overrides.partners.items.map(p => ({
+        name: p.name || '', district: p.district || '',
+        tag: p.tag || 'BAR', real: true,
+        _photoUrl: p.photoUrl || null,
+      }));
+    }
+  }
+
+  if (overrides.stats) {
+    if (overrides.stats.matches && C.stats[0]) {
+      const m = overrides.stats.matches;
+      if (m.value  !== undefined) C.stats[0].value  = m.value;
+      if (m.suffix !== undefined) C.stats[0].suffix = m.suffix;
+      if (m.note   !== undefined) C.stats[0].note   = m.note;
+    }
+    if (overrides.stats.venues && C.stats[1]) {
+      const v = overrides.stats.venues;
+      if (v.value !== undefined) C.stats[1].value = v.value;
+      if (v.note  !== undefined) C.stats[1].note  = v.note;
+    }
+  }
+}
+
+function App() {
+  const [contentVersion, setContentVersion] = React.useState(0);
+  const [t, setTweak] = window.useTweaks(window.TWEAK_DEFAULTS);
+
+  React.useEffect(() => {
+    window.__contentReady.then(function(overrides) {
+      if (overrides && Object.keys(overrides).length > 0) {
+        applyContentOverrides(overrides);
+        setContentVersion(function(v) { return v + 1; });
+      }
+    });
+  }, []);
+
+  const tweakCSS = `
+    .lva-doc {
+      --t-scale: ${t.type_scale / 100};
+      --t-density: ${t.density / 100};
+      --t-radius: ${t.radius}px;
+      --_r: ${t.radius}px;
+      max-width: ${t.page_width}px;
+      margin: 0 auto;
+    }
+  `;
+
+  return (
+    <React.Fragment>
+      <style dangerouslySetInnerHTML={{ __html: tweakCSS }} />
+      <div className="lva-page lva-doc">
+        <window.DirectionA key={contentVersion} />
+      </div>
+      <window.TweaksPanel title="Lava Tweaks">
+        <window.TweakSection label="Typography" />
+        <window.TweakSlider label="Type Scale" value={t.type_scale} min={70} max={130} step={1} suffix="%" onChange={(v) => setTweak('type_scale', v)} />
+        <window.TweakSection label="Layout" />
+        <window.TweakSlider label="Density" value={t.density} min={60} max={140} step={1} suffix="%" onChange={(v) => setTweak('density', v)} />
+        <window.TweakSlider label="Radius" value={t.radius} min={0} max={40} step={1} suffix="px" onChange={(v) => setTweak('radius', v)} />
+        <window.TweakSlider label="Page Width" value={t.page_width} min={1024} max={1920} step={8} suffix="px" onChange={(v) => setTweak('page_width', v)} />
+      </window.TweaksPanel>
+    </React.Fragment>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+
+</body>
+</html>
