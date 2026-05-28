@@ -1,0 +1,362 @@
+/* ============================================================
+   LAVA — Colors & Type tokens
+   ============================================================
+   Source of truth: brand visual guidelines by 呂罰 Kipha Lu (Nov 2024),
+   adapted for product / web use. All hex values lifted verbatim
+   from the VI guide; semantic roles inferred from the
+   "Logo Colors" + "Color Proportion" + "Backgrounds" pages.
+   ============================================================ */
+
+/* ---- Webfonts ------------------------------------------------
+   Brand specifies:
+   - TT Nooks (logo & EN display)  — paid, not bundled. Use Fraunces from
+     Google Fonts as a substitute (closest free high-contrast modern serif).
+   - Inter (EN body)               — Google Fonts.
+   - HarmonyOS Sans TC (TC body)   — **bundled** in fonts/ (Regular, Medium,
+     Thin, Thin Italic).
+
+   In your <head> also add:
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..900&family=Inter:wght@300..900&display=swap" rel="stylesheet">
+   ============================================================ */
+
+@font-face {
+  font-family: "HarmonyOS Sans TC";
+  src: url("./HarmonyOS_Sans_TC_Thin.ttf") format("truetype");
+  font-weight: 100 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "HarmonyOS Sans TC";
+  src: url("./HarmonyOS_Sans_TC_Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "HarmonyOS Sans TC";
+  src: url("./HarmonyOS_Sans_TC_Medium.ttf") format("truetype");
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* Latin-only HarmonyOS Sans (Thin / Thin Italic) — useful for caption text
+   that mixes English and TC within the same line. */
+@font-face {
+  font-family: "HarmonyOS Sans";
+  src: url("./HarmonyOS_Sans_Thin.ttf") format("truetype");
+  font-weight: 100 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "HarmonyOS Sans";
+  src: url("./HarmonyOS_Sans_Thin_Italic.ttf") format("truetype");
+  font-weight: 100 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* ============ CORE PALETTE (Primary) ============ */
+  /* Hero — appears on ~60% of brand surfaces */
+  --lava-orange: #E84224;
+  /* Anchor — body text on light, surfaces on dark */
+  --night-olive: #292D1C;
+  /* Accent — sophistication / depth */
+  --wine-red: #741017;
+  /* Warmth — ivory background, secondary on dark */
+  --soft-yellow: #FFE6A9;
+  --white: #FFFFFF;
+  --black: #000000;
+
+  /* ============ EXTENDED PALETTE ============ */
+  /* Wine */
+  --wine-light: #8A131B;
+  --wine: #741017;
+  --wine-dark: #5E0D13;
+
+  /* Olive */
+  --olive-light: #373D26;
+  --olive: #292D1C;
+  --olive-dark: #0C0E08;
+
+  /* Orange */
+  --orange-light: #EA563B;
+  --orange: #E84224;
+  --orange-dark: #DB3517;
+
+  /* Yellow */
+  --yellow-light: #FFF5DC;
+  --yellow: #FFE6A9;
+  --yellow-dark: #FFD05D;
+
+  /* ============ PRIMITIVES — Brand colour tokens ============
+     Source: Lava internal primitives spec ("primitives color" board).
+     These are the canonical product tokens; the VI palette above is the
+     marketing/brand layer that sits on top.
+     ========================================================== */
+
+  /* Branding primitives */
+  --lava-orange-base: #E84224;
+  --lava-orange-dark-primitive: #DB3517;
+  --night-olive-dark-primitive: #0C0E08;
+
+  /* Neutral ramp (12 steps) — near-true greys per spec */
+  --neutral-white: #FFFFFF;
+  --neutral-50:  #F5F7F2;
+  --neutral-100: #EBEDE8;
+  --neutral-200: #DEE0DB;
+  --neutral-300: #CBCCC8;
+  --neutral-400: #A5A7A2;
+  --neutral-500: #848681;
+  --neutral-600: #5D5F5B;
+  --neutral-700: #4B4C48;
+  --neutral-800: #2D2F2B;
+  --neutral-900: #1A1B1A;
+  --neutral-black: #000000;
+
+  /* Danger ramp (red, 11 steps) — separate from brand wine red */
+  --red-50:  #FFF2F1;
+  --red-100: #FFE1DF;
+  --red-200: #FFC8C5;
+  --red-300: #FFA29D;
+  --red-400: #FF6C64;
+  --red-500: #FF2C20;
+  --red-600: #ED2115;
+  --red-700: #C8170D;
+  --red-800: #A5170F;
+  --red-900: #881A14;
+  --red-950: #4B0804;
+
+  /* ============ SEMANTIC COLOR TOKENS ============ */
+  /* Surfaces */
+  --bg: var(--soft-yellow);           /* default warm ivory canvas */
+  --bg-cream: var(--yellow-light);    /* softer surface (cards on ivory) */
+  --bg-dark: var(--olive);            /* dark mode / hero blocks */
+  --bg-darker: var(--olive-dark);
+  --bg-white: var(--white);
+  --surface: #FFFFFF;
+  --surface-raised: #FFFAEF;
+
+  /* Foreground (text/icon) on light surfaces */
+  --fg-1: var(--olive);               /* primary text */
+  --fg-2: var(--olive-light);         /* secondary text */
+  --fg-3: #6D7158;                    /* tertiary / hints */
+  --fg-muted: #9A9C8A;
+
+  /* Foreground on dark surfaces */
+  --fg-on-dark-1: var(--soft-yellow);
+  --fg-on-dark-2: var(--yellow-light);
+  --fg-on-dark-3: #B8B58E;
+
+  /* Accent / interactive */
+  --accent: var(--lava-orange);
+  --accent-hover: var(--orange-dark);
+  --accent-press: #C12C12;
+  --accent-soft: #FBE2DC;            /* lava-orange @ ~12% */
+  --link: var(--wine-red);
+  --link-hover: var(--wine-dark);
+
+  /* Status */
+  --success: #3F7A3A;
+  --warning: var(--yellow-dark);
+  --danger: var(--orange);
+  --info: var(--olive-light);
+
+  /* Borders / dividers */
+  --border-1: rgba(41, 45, 28, 0.12);
+  --border-2: rgba(41, 45, 28, 0.22);
+  --border-strong: var(--olive);
+  --border-on-dark: rgba(255, 230, 169, 0.18);
+
+  /* ============ TYPOGRAPHY ============ */
+  /* Font families */
+  --font-display: "Fraunces", "TT Nooks", "Noto Serif TC", Georgia, serif;
+  --font-sans: "Inter", "Noto Sans TC", "HarmonyOS Sans TC",
+               -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-tc: "Noto Sans TC", "HarmonyOS Sans TC", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Type scale (VI: H1 38 / H2 30 / H3 20 / H4 18 / H5 15 / H6 13) */
+  --fs-display: 72px;
+  --fs-h1: 38px;
+  --fs-h2: 30px;
+  --fs-h3: 20px;
+  --fs-h4: 18px;
+  --fs-h5: 15px;
+  --fs-h6: 13px;
+  --fs-body: 16px;
+  --fs-body-sm: 14px;
+  --fs-caption: 11px;
+
+  /* Weights */
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+  --fw-black: 900;
+
+  /* Line heights */
+  --lh-tight: 1.05;
+  --lh-display: 1.0;
+  --lh-heading: 1.18;
+  --lh-body: 1.55;
+  --lh-loose: 1.7;
+
+  /* Letter spacing */
+  --ls-display: -0.02em;
+  --ls-heading: -0.01em;
+  --ls-body: 0;
+  --ls-eyebrow: 0.16em;     /* ALL-CAPS eyebrow labels */
+
+  /* ============ SPACING ============ */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* ============ RADII ============ */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;        /* default card */
+  --radius-lg: 20px;        /* feature card */
+  --radius-xl: 32px;        /* hero / sheet */
+  --radius-pill: 999px;     /* tags, buttons */
+  --radius-circle: 50%;
+
+  /* ============ ELEVATION ============ */
+  /* Lava prefers soft shadow + strong border over heavy elevation */
+  --shadow-0: 0 1px 0 rgba(41, 45, 28, 0.04);
+  --shadow-1: 0 2px 6px rgba(41, 45, 28, 0.06), 0 1px 2px rgba(41, 45, 28, 0.04);
+  --shadow-2: 0 8px 20px rgba(41, 45, 28, 0.08), 0 2px 4px rgba(41, 45, 28, 0.04);
+  --shadow-3: 0 18px 40px rgba(41, 45, 28, 0.16), 0 4px 8px rgba(41, 45, 28, 0.06);
+  --shadow-press: inset 0 2px 4px rgba(12, 14, 8, 0.18);
+  --shadow-glow-orange: 0 0 0 4px rgba(232, 66, 36, 0.18);
+
+  /* ============ MOTION ============ */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 360ms;
+}
+
+/* ============ SEMANTIC TYPE STYLES ============
+   Use these as classes (e.g. <h1 class="t-h1">) or as
+   @extend-style references when authoring components.
+   ============================================================ */
+
+.t-display,
+.t-h1, .t-h2, .t-h3, .t-h4 {
+  font-family: var(--font-display);
+  color: var(--fg-1);
+  text-wrap: balance;
+}
+
+.t-display {
+  font-size: var(--fs-display);
+  font-weight: var(--fw-black);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+}
+
+.t-h1 {
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-extrabold);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-heading);
+}
+
+.t-h2 {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-extrabold);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-heading);
+}
+
+.t-h3 {
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+}
+
+.t-h4 {
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+}
+
+.t-h5 {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h5);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-heading);
+  color: var(--fg-1);
+}
+
+.t-h6 {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h6);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-heading);
+  color: var(--fg-1);
+}
+
+.t-body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg-1);
+}
+
+.t-body-sm {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  color: var(--fg-2);
+}
+
+.t-caption {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  line-height: 1.4;
+  color: var(--fg-3);
+}
+
+.t-eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Tone: TC content reads denser; relax line-height. */
+.t-tc {
+  font-family: var(--font-tc);
+  line-height: var(--lh-loose);
+}
+
+/* Resets so plain h1..h6/p match brand by default */
+body { font-family: var(--font-sans); color: var(--fg-1); background: var(--bg); }
+h1 { font: var(--fw-extrabold) var(--fs-h1)/var(--lh-heading) var(--font-display); letter-spacing: var(--ls-heading); }
+h2 { font: var(--fw-extrabold) var(--fs-h2)/var(--lh-heading) var(--font-display); letter-spacing: var(--ls-heading); }
+h3 { font: var(--fw-bold)      var(--fs-h3)/var(--lh-heading) var(--font-display); }
+h4 { font: var(--fw-bold)      var(--fs-h4)/var(--lh-heading) var(--font-display); }
+h5 { font: var(--fw-semibold)  var(--fs-h5)/var(--lh-heading) var(--font-sans); }
+h6 { font: var(--fw-semibold)  var(--fs-h6)/var(--lh-heading) var(--font-sans); }
+p  { font: var(--fw-regular)   var(--fs-body)/var(--lh-body) var(--font-sans); }

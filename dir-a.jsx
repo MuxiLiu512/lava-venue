@@ -157,7 +157,7 @@ function DirectionA() {
     }
     .dir-a .a-hero__photo {
       aspect-ratio: 4/5;
-      background-image: url(assets/icebreaker-table.jpg);
+      background-image: url(./icebreaker-table.jpg);
       background-size: cover;
       background-position: center;
       border-radius: var(--t-radius);
@@ -617,7 +617,7 @@ function DirectionA() {
       {/* ============ NAV ============ */}
       <nav className="a-nav" style={{ background: "var(--bg-deep)" }}>
         <a href="/" className="a-nav__brand" style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <img src="assets/logo-orange-horizontal.png" alt="Lava" style={{ height: 24, filter: "none" }} />
+          <img src="./logo-orange-horizontal.png" alt="Lava" style={{ height: 24, filter: "none" }} />
           <span className="a-mono" style={{ color: "var(--fg-on-dark-3)", borderLeft: "1px solid var(--line-dark)", paddingLeft: 14 }}>VENUE PARTNERS</span>
         </a>
         <div className="a-nav__links">
@@ -711,10 +711,10 @@ function DirectionA() {
         <div className="a-how__row">
           {t.how.map((h, i) => {
             const ill = [
-              "assets/apron-host.svg",
-              "assets/host-couple.svg",
-              "assets/pour-share.svg",
-              "assets/cheers-pair.svg",
+              "./apron-host.svg",
+              "./host-couple.svg",
+              "./pour-share.svg",
+              "./cheers-pair.svg",
             ][i];
             return (
               <div key={i} className={"a-how__step" + (i === t.how.length - 1 ? " has-cta" : "")}>
@@ -744,7 +744,7 @@ function DirectionA() {
         <div className="a-partners__grid">
           {t.partners.map((p, i) => (
             <div key={i} className="a-partners__card">
-              <div className="a-partners__photo lf-photo lf-photo--mark" style={{ backgroundImage: i === 0 ? "url(assets/icebreaker-fan.jpg)" : "none", backgroundColor: i === 0 ? "transparent" : "rgba(26,27,20,0.07)" }} />
+              <div className="a-partners__photo lf-photo lf-photo--mark" style={{ backgroundImage: i === 0 ? "url(./icebreaker-fan.jpg)" : "none", backgroundColor: i === 0 ? "transparent" : "rgba(26,27,20,0.07)" }} />
               <div className="a-partners__body">
                 <span className="a-mono" style={{ color: "var(--accent)" }}>{p.tag}</span>
                 <h3 className="a-h3">{p.name}</h3>
@@ -825,7 +825,7 @@ function DirectionA() {
       <footer className="a-footer">
         <div className="a-footer__grid">
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <img src="assets/logo-orange-horizontal.png" alt="Lava" style={{ height: 28, width: "auto", alignSelf: "flex-start" }} />
+            <img src="./logo-orange-horizontal.png" alt="Lava" style={{ height: 28, width: "auto", alignSelf: "flex-start" }} />
             <p className="a-small" style={{ color: "var(--fg-on-dark-2)", maxWidth: 280 }}>
               {t.brand.sloganTC}<br />
               <span style={{ color: "var(--fg-on-dark-3)" }}>{t.brand.slogan}</span>
