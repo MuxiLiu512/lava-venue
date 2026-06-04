@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Lava 後台管理 · Admin</title>
+<link rel="icon" href="./logo-orange-horizontal.png" type="image/png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -337,6 +338,12 @@ hr.rule { border: none; border-top: 1px solid var(--line); margin: 20px 0; }
     <button class="ni" id="nav-stats" onclick="show('stats', this)">
       <span class="ni-dot"></span>數據統計
     </button>
+    <button class="ni" id="nav-faq" onclick="show('faq', this)">
+      <span class="ni-dot"></span>常見問題
+    </button>
+    <button class="ni" id="nav-founder" onclick="show('founder', this)">
+      <span class="ni-dot"></span>創辦人話語
+    </button>
   </div>
   <div class="sg">
     <span class="sg-label">發布</span>
@@ -508,6 +515,48 @@ hr.rule { border: none; border-top: 1px solid var(--line); margin: 20px 0; }
 </div><!-- /sec-stats -->
 
 
+<!-- 常見問題 -->
+<div id="sec-faq" class="sec" style="display:none">
+  <div class="sec-head">
+    <div>
+      <div class="page-title">常見問題（Q&amp;A）</div>
+      <div class="page-sub">編輯首頁「常見問題」區塊，可新增、刪除或調整問題</div>
+    </div>
+  </div>
+
+  <div id="faq-list"></div>
+
+  <button class="btn btn-g" style="margin-top:14px;width:100%;justify-content:center" onclick="addFAQ()">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1V12M1 6.5H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    新增問題
+  </button>
+</div><!-- /sec-faq -->
+
+
+<!-- 創辦人話語 -->
+<div id="sec-founder" class="sec" style="display:none">
+  <div class="sec-head">
+    <div>
+      <div class="page-title">創辦人話語</div>
+      <div class="page-sub">編輯申請區塊中的 Co-founder Note 文字</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <span class="card-title">話語內容</span>
+      <span class="card-tag">CO-FOUNDER NOTE</span>
+    </div>
+    <div class="fg fg-1">
+      <div class="field">
+        <label>文字內容（不需加引號，網站會自動加上）</label>
+        <textarea id="f-body" rows="5" placeholder="例：我們從來不覺得交友 App 是科技問題…"></textarea>
+      </div>
+    </div>
+  </div>
+</div><!-- /sec-founder -->
+
+
 <!-- 匯出 · 部署 -->
 <div id="sec-deploy" class="sec" style="display:none">
   <div class="sec-head">
@@ -642,9 +691,12 @@ let S = {
   partners:    [],
   stats:       { matchVal:'', matchSuf:'', matchNote:'', venueVal:'', venueNote:'' },
   showPartners: false,
+  faq:         [],
+  founder:     { body: '' },
 };
 let P = {};
 let pid = 0;
+let faqId = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
   load();
@@ -660,6 +712,8 @@ function load() {
       if (d.partners)    S.partners = d.partners;
       if (d.stats)       Object.assign(S.stats, d.stats);
       if (d.showPartners !== undefined) S.showPartners = d.showPartners;
+      if (d.faq && Array.isArray(d.faq)) S.faq = d.faq;
+      if (d.founder) Object.assign(S.founder, d.founder);
     }
   } catch(e) {}
   try {
@@ -669,12 +723,17 @@ function load() {
   if (S.partners.length) {
     pid = Math.max(...S.partners.map(p => p._id || 0)) + 1;
   }
+  if (S.faq.length) {
+    faqId = Math.max(...S.faq.map(f => f._id || 0)) + 1;
+  }
 }
 
 function render() {
   renderTestimonial();
   renderPartners();
   renderStats();
+  renderFAQ();
+  renderFounder();
   updateBadge();
 }
 
@@ -848,6 +907,84 @@ function collectStats() {
   };
 }
 
+/* ── FAQ ── */
+const DEFAULT_FAQ = [
+  { q:'加入成為 Lava 合作店家費用怎麼計算？', a:'統一費用為初次設定費 NT$1,000 元、季訂閱費 NT$9,000 元。首季合作將承諾商家至少引流 10 組客人至店；若未達標則全額退還該季訂閱費用。' },
+  { q:'客人是怎麼選到我的店的？', a:'Lava 會依雙方用戶的所在區域、想去的店家類型（酒吧／咖啡／餐廳）、可用時段，從你開放的時段中推薦合適的時段給用戶，由用戶最終確認。' },
+  { q:'我可以指定哪些時段對 Lava 開放嗎？', a:'可以。每週可自由勾選可開放時段、座位數、與每對客人的最低消費。也可以暫時關閉特定週次，例如包場活動時。' },
+  { q:'合作有最短期限嗎？想退出怎麼辦？', a:'我們的合作採用季度合作，以確保用戶、商家、Lava 團隊能有足夠的時間進行了解及優化服務。合作商家需於合作期間提前 30 天提出下架申請，以確保用戶不會被安排至已解除合作的商家，維護用戶及合作商家之權益。' },
+  { q:'我會拿到客人的個資嗎？', a:'店家會在客人到店前收到匿名化的訂位資訊（時間、人數、客人化名與聯絡電話）。完整個資僅用於配對與聯繫，不會提供給店家做行銷使用。' },
+];
+
+function renderFAQ() {
+  if (!S.faq.length) {
+    S.faq = DEFAULT_FAQ.map((f, i) => ({ _id: i, q: f.q, a: f.a }));
+    faqId = S.faq.length;
+  }
+  const list = document.getElementById('faq-list');
+  list.innerHTML = '';
+  S.faq.forEach((f, i) => list.appendChild(makeFAQCard(f, i)));
+}
+
+function makeFAQCard(f, idx) {
+  const d = document.createElement('div');
+  d.className = 'card';
+  d.id = 'faq-' + f._id;
+  if (idx > 0) d.style.marginTop = '14px';
+  d.innerHTML = `
+    <div class="card-head">
+      <span class="card-title">問題 ${idx + 1}</span>
+      <button class="btn btn-g btn-xs btn-d" onclick="removeFAQ(${f._id})">移除</button>
+    </div>
+    <div class="fg fg-1" style="gap:10px">
+      <div class="field">
+        <label>問題</label>
+        <input type="text" id="fq-${f._id}" value="${esc(f.q||'')}" placeholder="例：費用怎麼計算？">
+      </div>
+      <div class="field">
+        <label>回答</label>
+        <textarea id="fa-${f._id}" rows="3" placeholder="填入回答內容">${esc(f.a||'')}</textarea>
+      </div>
+    </div>
+  `;
+  return d;
+}
+
+function addFAQ() {
+  const f = { _id: faqId++, q: '', a: '' };
+  S.faq.push(f);
+  const list = document.getElementById('faq-list');
+  const card = makeFAQCard(f, S.faq.length - 1);
+  card.style.marginTop = '14px';
+  list.appendChild(card);
+}
+
+function removeFAQ(id) {
+  S.faq = S.faq.filter(f => f._id !== id);
+  const el = document.getElementById('faq-' + id);
+  if (el) el.remove();
+  toast('已移除問題');
+}
+
+function collectFAQ() {
+  S.faq = S.faq.map(f => ({
+    _id: f._id,
+    q: val('fq-' + f._id),
+    a: val('fa-' + f._id),
+  }));
+}
+
+/* ── Founder ── */
+const DEFAULT_FOUNDER_BODY = '我們從來不覺得交友 App 是科技問題，而是「人有沒有真的見面」這件事。Lava 把見面的門檻拉到最低、把見面的場所交給最會做場景的合作店家。如果你的店也相信好的對話需要被好的空間承接，歡迎來聊聊。';
+
+function renderFounder() {
+  set('f-body', S.founder.body || DEFAULT_FOUNDER_BODY);
+}
+
+function collectFounder() {
+  S.founder.body = val('f-body');
+}
+
 /* ── Photo upload ── */
 function triggerFile(key) { document.getElementById('file-' + key).click(); }
 
@@ -952,11 +1089,15 @@ function saveAll() {
   collectTestimonial();
   collectPartners();
   collectStats();
+  collectFAQ();
+  collectFounder();
 
   const content = {
     testimonial:  { ...S.testimonial },
     partners:     S.partners.map(p => ({ name:p.name, district:p.district, tag:p.tag })),
     stats:        { ...S.stats },
+    faq:          S.faq.map(f => ({ _id:f._id, q:f.q, a:f.a })),
+    founder:      { ...S.founder },
     showPartners: S.showPartners,
   };
 
@@ -991,11 +1132,13 @@ function saveAll() {
   toast('所有變更已儲存');
 }
 
-/* ── Export content.json (the format landing.html reads) ── */
+/* ── Export content.json (the format index.html reads) ── */
 function exportContentJSON() {
   collectTestimonial();
   collectPartners();
   collectStats();
+  collectFAQ();
+  collectFounder();
 
   // Avatar URL: prefer external URL, fall back to nothing (base64 too large)
   const avatarUrl = P['testimonial_avatar_url'] || null;
@@ -1030,6 +1173,8 @@ function exportContentJSON() {
         note:  S.stats.venueNote || '招募中',
       },
     },
+    faq: S.faq.map(f => ({ q: f.q || '', a: f.a || '' })),
+    founder: { body: S.founder.body || DEFAULT_FOUNDER_BODY },
   };
 
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -1038,7 +1183,7 @@ function exportContentJSON() {
   a.download = 'content.json';
   a.click();
   URL.revokeObjectURL(a.href);
-  toast('content.json 已下載 — 把它放入 venue 資料夾再上傳 Netlify');
+  toast('content.json 已下載 — 放入 lava-venue 資料夾後提交到 GitHub');
 }
 
 /* ── Import ── */
@@ -1079,6 +1224,11 @@ function doImport() {
       // Legacy format support
       if (d.stats.matchVal !== undefined) Object.assign(S.stats, d.stats);
     }
+    if (d.faq && Array.isArray(d.faq)) {
+      S.faq = d.faq.map((f, i) => ({ ...f, _id: f._id !== undefined ? f._id : i }));
+      faqId = S.faq.length;
+    }
+    if (d.founder && d.founder.body !== undefined) S.founder.body = d.founder.body;
 
     render();
     document.getElementById('import-box').value = '';
@@ -1092,8 +1242,8 @@ function doClear() {
   if (!confirm('確定要清除所有後台設定嗎？此操作無法復原。')) return;
   localStorage.removeItem(CK);
   localStorage.removeItem(PK);
-  S = { testimonial: { quote:'', author:'', venue:'' }, partners: [], stats: {}, showPartners: false };
-  P = {}; pid = 0;
+  S = { testimonial: { quote:'', author:'', venue:'' }, partners: [], stats: {}, showPartners: false, faq: [], founder: { body: '' } };
+  P = {}; pid = 0; faqId = 0;
   render();
   toast('所有設定已清除');
 }
@@ -1119,7 +1269,7 @@ function esc(s) {
     .replace(/&/g,'&amp;').replace(/"/g,'&quot;')
     .replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-function openPreview() { window.open('landing.html', '_blank'); }
+function openPreview() { window.open('index.html', '_blank'); }
 </script>
 </body>
 </html>

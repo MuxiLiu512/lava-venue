@@ -579,14 +579,20 @@ function DirectionA() {
       .dir-a .a-hero__grid { padding: 32px 20px 0; }
       .dir-a .a-hero__chrome { padding: 12px 20px; gap: 8px; }
       .dir-a .a-hero__chrome span:nth-child(3) { display: none; }
-      .dir-a .a-display { font-size: clamp(36px, 12.5vw, 44px); letter-spacing: -0.035em; }
+      .dir-a .a-display { font-size: clamp(36px, 12.5vw, 44px); letter-spacing: calc(-0.035em + 2px); }
       .dir-a .a-h2 { font-size: clamp(26px, 8vw, 32px); }
       .dir-a .a-hero__stat:first-child { padding-left: 20px !important; }
       .dir-a .a-hero__stat:last-child { padding-right: 20px !important; }
       .dir-a .a-footer__grid { grid-template-columns: 1fr; }
       /* Make hero CTAs full-width on small phones */
       .dir-a .a-hero__cta-row { flex-direction: column; align-items: stretch; }
-      .dir-a .a-hero__cta-row .lf-cta { width: 100%; justify-content: center; }
+      .dir-a .a-hero__cta-row .lf-cta {
+        display: flex;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        justify-content: center;
+      }
     }
   `;
 
