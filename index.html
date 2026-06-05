@@ -25,7 +25,7 @@ window.TWEAK_DEFAULTS = { type_scale: 99, density: 100, radius: 16, page_width: 
 // Start fetching content.json immediately (before Babel compiles JSX)
 window.__contentReady = (function() {
   if (window.location.protocol === 'file:') return Promise.resolve({});
-  return fetch('./content.json')
+  return fetch('./content.json?v=' + Date.now(), { cache: 'no-store' })
     .then(function(r) { return r.ok ? r.json() : {}; })
     .catch(function() { return {}; });
 })();
@@ -75,7 +75,9 @@ function applyContentOverrides(overrides) {
   }
 
   if (overrides.founder) {
-    if (overrides.founder.body !== undefined) C.founder.body = overrides.founder.body;
+    if (overrides.founder.body  !== undefined) C.founder.body  = overrides.founder.body;
+    if (overrides.founder.name  !== undefined) C.founder.name  = overrides.founder.name;
+    if (overrides.founder.title !== undefined) C.founder.title = overrides.founder.title;
   }
 
   if (overrides.stats) {

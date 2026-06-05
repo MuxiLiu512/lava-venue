@@ -775,8 +775,6 @@ function DirectionA() {
             <div className="a-h3" style={{ fontSize: "calc(20px * var(--t-scale))" }}>{t.testimonial.author}</div>
             <div className="a-small" style={{ color: "rgba(26,27,20,0.65)" }}>{t.testimonial.venue}</div>
           </div>
-          <div style={{ flex: 1 }} />
-          <span className="a-mono" style={{ color: "rgba(26,27,20,0.4)" }}>{t.testimonial.note}</span>
         </div>
       </section>
 

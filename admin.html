@@ -545,6 +545,23 @@ hr.rule { border: none; border-top: 1px solid var(--line); margin: 20px 0; }
 
   <div class="card">
     <div class="card-head">
+      <span class="card-title">作者資訊</span>
+      <span class="card-tag">AUTHOR</span>
+    </div>
+    <div class="fg">
+      <div class="field">
+        <label>姓名</label>
+        <input type="text" id="f-name" placeholder="例：Vivian Wu">
+      </div>
+      <div class="field">
+        <label>職稱</label>
+        <input type="text" id="f-title" placeholder="例：Lava 共同創辦人">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
       <span class="card-title">話語內容</span>
       <span class="card-tag">CO-FOUNDER NOTE</span>
     </div>
@@ -693,7 +710,7 @@ let S = {
   stats:       { matchVal:'', matchSuf:'', matchNote:'', venueVal:'', venueNote:'' },
   showPartners: false,
   faq:         [],
-  founder:     { body: '' },
+  founder:     { body: '', name: '', title: '' },
 };
 let P = {};
 let pid = 0;
@@ -976,14 +993,20 @@ function collectFAQ() {
 }
 
 /* ── Founder ── */
-const DEFAULT_FOUNDER_BODY = '我們從來不覺得交友 App 是科技問題，而是「人有沒有真的見面」這件事。Lava 把見面的門檻拉到最低、把見面的場所交給最會做場景的合作店家。如果你的店也相信好的對話需要被好的空間承接，歡迎來聊聊。';
+const DEFAULT_FOUNDER_BODY  = '我們從來不覺得交友 App 是科技問題，而是「人有沒有真的見面」這件事。Lava 把見面的門檻拉到最低、把見面的場所交給最會做場景的合作店家。如果你的店也相信好的對話需要被好的空間承接，歡迎來聊聊。';
+const DEFAULT_FOUNDER_NAME  = 'Vivian Wu';
+const DEFAULT_FOUNDER_TITLE = 'Lava 共同創辦人';
 
 function renderFounder() {
-  set('f-body', S.founder.body || DEFAULT_FOUNDER_BODY);
+  set('f-name',  S.founder.name  || DEFAULT_FOUNDER_NAME);
+  set('f-title', S.founder.title || DEFAULT_FOUNDER_TITLE);
+  set('f-body',  S.founder.body  || DEFAULT_FOUNDER_BODY);
 }
 
 function collectFounder() {
-  S.founder.body = val('f-body');
+  S.founder.name  = val('f-name');
+  S.founder.title = val('f-title');
+  S.founder.body  = val('f-body');
 }
 
 /* ── Photo upload ── */
@@ -1175,7 +1198,11 @@ function exportContentJSON() {
       },
     },
     faq: S.faq.map(f => ({ q: f.q || '', a: f.a || '' })),
-    founder: { body: S.founder.body || DEFAULT_FOUNDER_BODY },
+    founder: {
+      body:  S.founder.body  || DEFAULT_FOUNDER_BODY,
+      name:  S.founder.name  || DEFAULT_FOUNDER_NAME,
+      title: S.founder.title || DEFAULT_FOUNDER_TITLE,
+    },
   };
 
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -1229,7 +1256,11 @@ function doImport() {
       S.faq = d.faq.map((f, i) => ({ ...f, _id: f._id !== undefined ? f._id : i }));
       faqId = S.faq.length;
     }
-    if (d.founder && d.founder.body !== undefined) S.founder.body = d.founder.body;
+    if (d.founder) {
+      if (d.founder.body  !== undefined) S.founder.body  = d.founder.body;
+      if (d.founder.name  !== undefined) S.founder.name  = d.founder.name;
+      if (d.founder.title !== undefined) S.founder.title = d.founder.title;
+    }
 
     render();
     document.getElementById('import-box').value = '';
@@ -1243,7 +1274,7 @@ function doClear() {
   if (!confirm('確定要清除所有後台設定嗎？此操作無法復原。')) return;
   localStorage.removeItem(CK);
   localStorage.removeItem(PK);
-  S = { testimonial: { quote:'', author:'', venue:'' }, partners: [], stats: {}, showPartners: false, faq: [], founder: { body: '' } };
+  S = { testimonial: { quote:'', author:'', venue:'' }, partners: [], stats: {}, showPartners: false, faq: [], founder: { body: '', name: '', title: '' } };
   P = {}; pid = 0; faqId = 0;
   render();
   toast('所有設定已清除');
